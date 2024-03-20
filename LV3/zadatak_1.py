@@ -64,5 +64,7 @@ print('\nManual transmission car count: ' + str(data[data['Transmission'].str.st
 
 
 # i)
+print(data.corr(numeric_only=True))
+
 
 plt.show()

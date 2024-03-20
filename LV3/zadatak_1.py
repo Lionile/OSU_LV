@@ -26,7 +26,8 @@ print("\nHighest fuel consumption:\n" + str(data.sort_values(by='Fuel Consumptio
 
 # c)
 temp_data = data[(data['Engine Size (L)'] > 2.5) & (data['Engine Size (L)'] < 3.5)]
-print("\nAverage CO2 emission for engine size between 2.5 and 3.5: " + str(temp_data['CO2 Emissions (g/km)'].mean()))
+print("\nNumber of cars with engine size between 2.5L and 3.5L: " + str(temp_data.shape[0]))
+print("Average CO2 emission for engine size between 2.5 and 3.5: " + str(temp_data['CO2 Emissions (g/km)'].mean()))
 
 
 # d)

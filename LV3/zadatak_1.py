@@ -57,7 +57,7 @@ print('Median gasoline fuel consumption: ' + str(data[data['Fuel Type'] == 'X'][
 
 
 # g)
-print('\nHighest 4 cylinder car fuel consumption: ' + str(data[(data['Cylinders'] == 4)].sort_values(by='Fuel Consumption City (L/100km)', ascending=False).head(1)[['Make', 'Model', 'Fuel Consumption City (L/100km)']]))
+print('\nHighest 4 cylinder car fuel consumption: ' + str(data[(data['Cylinders'] == 4) & (data['Fuel Type'] == 'D')].sort_values(by='Fuel Consumption City (L/100km)', ascending=False).head(1)[['Make', 'Model', 'Fuel Consumption City (L/100km)']]))
 
 
 # h)

@@ -29,6 +29,10 @@ theta0 = LogRegression_model.intercept_
 theta1 = LogRegression_model.coef_[0,0]
 theta2 = LogRegression_model.coef_[0,1]
 
+print("theta0: ", theta0)
+print("theta1: ", theta1)
+print("theta2: ", theta2)
+
 # d)
 # predikcija na skupu podataka za testiranje
 y_test_p = LogRegression_model.predict(X_test)

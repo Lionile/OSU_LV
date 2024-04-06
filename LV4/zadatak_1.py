@@ -54,12 +54,12 @@ print(linearModel.intercept_)
 y_test_p = linearModel.predict(X_test_n)
 
 plt.figure()
-plt.scatter(X_test['Fuel Consumption Hwy (L/100km)'], y_test, s=10)
-plt.scatter(X_test['Fuel Consumption Hwy (L/100km)'], y_test_p, s=10)
+plt.scatter(X_test['Fuel Consumption Hwy (L/100km)'], y_test, s=10, label='real data')
+plt.scatter(X_test['Fuel Consumption Hwy (L/100km)'], y_test_p, s=10, label='predicted data')
 plt.xlabel('CO2 Emissions (g/km)')
 plt.ylabel('Fuel Consumption Hwy (L/100km)')
 plt.title('Real Data vs Predicted Data')
-plt.legend(['real data', 'predicted data'])
+plt.legend()
 
 
 # f)
@@ -105,16 +105,14 @@ print("Mean Absolute Error (MAE): ", mae)
 print("Mean Squared Error (MSE): ", mse)
 print("Root Mean Squared Error (RMSE): ", rmse)
 
+
 # 4.5.2
 
 ohe = OneHotEncoder()
 data_encoded = data[['Make', 'Model', 'Vehicle Class', 'Engine Size (L)', 'Cylinders', 'Transmission', 'Fuel Type', 'Fuel Consumption City (L/100km)', 'Fuel Consumption Hwy (L/100km)', 'Fuel Consumption Comb (L/100km)', 'Fuel Consumption Comb (mpg)']]
-data_encoded['Make'] = ohe.fit_transform(data['Make']).toarray()
-data_encoded['Model'] = ohe.fit_transform(data['Model']).toarray()
-data_encoded['Vehicle'] = ohe.fit_transform(data['Vehicle']).toarray()
-data_encoded['Class'] = ohe.fit_transform(data['Class']).toarray()
-data_encoded['Transmission'] = ohe.fit_transform(data['Transmission']).toarray()
-data_encoded['Fuel Type'] = ohe.fit_transform(data['Fuel Type']).toarray()
+
+categorical_columns = ['Make', 'Model', 'Vehicle Class', 'Transmission', 'Fuel Type'] # All categorical columns, not just Fuel Type
+data_encoded = pd.get_dummies(data, columns=categorical_columns)
 
 y = data[['CO2 Emissions (g/km)']]
 
@@ -122,10 +120,28 @@ X_train, X_test, y_train, y_test = train_test_split(data_encoded, y, test_size=0
 
 
 linearModel = lm.LinearRegression()
-linearModel.fit(data_encoded, y_train)
+linearModel.fit(X_train, y_train)
 print(linearModel.coef_)
 print(linearModel.intercept_)
-y_test_p = linearModel.predict(X_test_n)
+y_test_p = linearModel.predict(X_test)
 
+plt.figure()
+plt.scatter(X_test['Engine Size (L)'], y_test, s=10, color='blue', label='real data')
+plt.scatter(X_test['Engine Size (L)'], y_test_p, s=10, color='red', label='predicted data')
+plt.xlabel('Engine Size (L)')
+plt.ylabel('CO2 Emissions (g/km)')
+plt.title('Real vs Predicted Data')
+plt.legend()
+
+max_mae = 0
+max_mae_index = 0
+for i in range(0, y_test_p.size):
+    mae = metrics.mean_absolute_error(y_test.iloc[i], y_test_p[i])
+    if mae > max_mae:
+        max_mae = mae
+        max_mae_index = i
+
+print("Max Mean Absolute Error (MAE): ", max_mae)
+print("Max mae vehicle:\n", data.iloc[max_mae_index][['Make', 'Model']])
 
 plt.show()

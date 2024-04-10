@@ -6,6 +6,7 @@ from matplotlib.colors import ListedColormap
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
+from sklearn.svm import SVC
 
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
@@ -99,7 +100,6 @@ plt.tight_layout()
 
 
 # 1.2
-
 # k = 1
 KNN_model = KNeighborsClassifier(n_neighbors = 1)
 KNN_model.fit(X_train_n, y_train)
@@ -132,12 +132,87 @@ plt.tight_layout()
 
 
 # 2
-param_grid = {'model__C': [10 , 100 , 100 ],'model__gamma':[10 , 1, 0.1, 0.01 ]}
-svm_gscv = GridSearchCV (pipe, param_grid , cv =5, scoring ='accuracy', n_jobs =-1)
-svm_gscv.fit(X_train, y_train )
-print(svm_gscv.best_params_)
-print(svm_gscv.best_score_)
-print(svm_gscv.cv_results_)
+param_grid = {'n_neighbors': np.arange(1,100)}
 
+svm_gscv = GridSearchCV(estimator=KNeighborsClassifier(), param_grid=param_grid, cv=5, scoring ='accuracy', n_jobs =-1)
+svm_gscv.fit(X_train_n, y_train)
+print('KNN grid search result: ' + str(svm_gscv.best_params_))
+#print(svm_gscv.best_score_)
+#print(svm_gscv.cv_results_)
+
+
+# 3
+SVM_model = svm.SVC(kernel='rbf', gamma = 0.1, C=0.1)
+SVM_model.fit(X_train_n, y_train)
+y_test_p = SVM_model.predict(X_test)
+plot_decision_regions(X_train_n, y_train, classifier=SVM_model)
+plt.xlabel('x_1')
+plt.ylabel('x_2')
+plt.legend(loc='upper left')
+plt.title("SVM(G=0.1,C=0.1)\nTocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.tight_layout()
+
+
+SVM_model = svm.SVC(kernel='rbf', gamma = 0.1, C=1)
+SVM_model.fit(X_train_n, y_train)
+y_test_p = SVM_model.predict(X_test)
+plot_decision_regions(X_train_n, y_train, classifier=SVM_model)
+plt.xlabel('x_1')
+plt.ylabel('x_2')
+plt.legend(loc='upper left')
+plt.title("SVM(G=0.1,C=1)\nTocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.tight_layout()
+
+
+SVM_model = svm.SVC(kernel='rbf', gamma = 0.1, C=10)
+SVM_model.fit(X_train_n, y_train)
+y_test_p = SVM_model.predict(X_test)
+plot_decision_regions(X_train_n, y_train, classifier=SVM_model)
+plt.xlabel('x_1')
+plt.ylabel('x_2')
+plt.legend(loc='upper left')
+plt.title("SVM(G=0.1,C=10)\nTocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.tight_layout()
+
+
+SVM_model = svm.SVC(kernel='rbf', gamma = 1, C=0.1)
+SVM_model.fit(X_train_n, y_train)
+y_test_p = SVM_model.predict(X_test)
+plot_decision_regions(X_train_n, y_train, classifier=SVM_model)
+plt.xlabel('x_1')
+plt.ylabel('x_2')
+plt.legend(loc='upper left')
+plt.title("SVM(G=1,C=0.1)\nTocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.tight_layout()
+
+
+SVM_model = svm.SVC(kernel='rbf', gamma = 1, C=1)
+SVM_model.fit(X_train_n, y_train)
+y_test_p = SVM_model.predict(X_test)
+plot_decision_regions(X_train_n, y_train, classifier=SVM_model)
+plt.xlabel('x_1')
+plt.ylabel('x_2')
+plt.legend(loc='upper left')
+plt.title("SVM(G=1,C=1)\nTocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.tight_layout()
+
+
+SVM_model = svm.SVC(kernel='rbf', gamma = 5, C=1)
+SVM_model.fit(X_train_n, y_train)
+y_test_p = SVM_model.predict(X_test)
+plot_decision_regions(X_train_n, y_train, classifier=SVM_model)
+plt.xlabel('x_1')
+plt.ylabel('x_2')
+plt.legend(loc='upper left')
+plt.title("SVM(G=5,C=1)\nTocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.tight_layout()
+
+
+# 4
+param_grid = {'gamma': np.arange(0.1,10,0.1), 'C': np.arange(0.1,10,0.1)}
+
+svm_gscv = GridSearchCV(estimator=SVC(), param_grid=param_grid, cv=5, scoring ='accuracy', n_jobs =-1)
+svm_gscv.fit(X_train_n, y_train)
+print('SVM grid search result: ' + str(svm_gscv.best_params_))
 
 plt.show()

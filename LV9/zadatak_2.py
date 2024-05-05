@@ -33,19 +33,23 @@ model = keras.Sequential()
 model.add(layers.Input(shape=(32,32,3)))
 model.add(layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'))
 model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+model.add(layers.Dropout(0.3))
 model.add(layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'))
 model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+model.add(layers.Dropout(0.3))
 model.add(layers.Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding='same'))
 model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+model.add(layers.Dropout(0.3))
 model.add(layers.Flatten())
 model.add(layers.Dense(500, activation='relu'))
+model.add(layers.Dropout(0.3))
 model.add(layers.Dense(10, activation='softmax'))
 
 model.summary()
 
 # definiraj listu s funkcijama povratnog poziva
 my_callbacks = [
-    keras.callbacks.TensorBoard(log_dir = 'logs/cnn-' + time.strftime('%Y-%m-%d_%H-%M-%S'), # add time to make each run unique
+    keras.callbacks.TensorBoard(log_dir = 'logs/cnn_dropout-' + time.strftime('%Y-%m-%d_%H-%M-%S'), # add time to make each run unique
                                 update_freq = 100)
 ]
 

@@ -54,28 +54,29 @@ x_test = x_test_s.reshape(10000, 784)
 
 model = keras.Sequential()
 model.add(layers.Input(shape = (784, )))
-model.add(layers.Dense(3, activation ="relu"))
-model.add(layers.Dense(1, activation = "sigmoid"))
+model.add(layers.Dense(100, activation ="relu"))
+model.add(layers.Dense(50, activation ="relu"))
+model.add(layers.Dense(10, activation = "softmax"))
 print(model.summary())
 
 # TODO: definiraj karakteristike procesa ucenja pomocu .compile()
-model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy",])
+model.compile(loss="categorical_crossentropy", optimizer=keras.optimizers.Adam(learning_rate=0.01), metrics=["accuracy",])
 
 
 # TODO: provedi ucenje mreze
-model.fit(x_train, y_train, batch_size=64, epochs=10, validation_split=0.1)
+model.fit(x_train, y_train_s, batch_size=64, epochs=15, validation_split=0.1)
 
 
 # TODO: Prikazi test accuracy i matricu zabune
-score = model.evaluate( x_test, y_test, verbose =0)
+score = model.evaluate( x_test, y_test_s, verbose =0)
 print("Accuracy: ", score[1])
 print("Loss: ", score[0])
-print("Confusion matrix: \n", confusion_matrix(y_test, model.predict(x_test)))
+print("Confusion matrix: \n", confusion_matrix(y_test, np.argmax(model.predict(x_test), axis=1)))
 
 
 # TODO: spremi model
 model.save("LV8_model.keras")
 
-
+predicted = model.predict(x_test)
 
 plt.show()

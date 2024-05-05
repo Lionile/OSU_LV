@@ -3,6 +3,7 @@ from tensorflow import keras
 from keras import layers, models
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix
+from PIL import Image
 
 model = keras.models.load_model("LV8_model.keras")
 
@@ -32,23 +33,35 @@ y_train_s = keras.utils.to_categorical(y_train, num_classes)
 y_test_s = keras.utils.to_categorical(y_test, num_classes)
 
 
-# prikaz lose klasificiranih slika
-predicted = model.predict(x_test)
-predicted = np.argmax(predicted, axis=1)
-# example values
-#print("Predicted:\n" + str(predicted, axis=1)))
-#print("True:\n" + str(y_test[0:10]))
+def prepare_image(image):
+    image = image.convert("L")  # grayscale
+    image = image.resize((28, 28))  # resize image
 
-wrong_predictions = predicted != y_test
-wrong_images = x_test_s[wrong_predictions]
-true_labels = y_test[wrong_predictions]
-predicted_labels = predicted[wrong_predictions]
+    image = np.array(image)
+    image = image.astype("float32") / 255
+    image = np.expand_dims(image, axis=-1)
+    image = image.reshape(1, 784)
+    return image
 
-for i in range(3): # show first x wrong images
+
+
+# test the model on new images
+images = ["test2.png", "test5.png", "test7.png", "test8.png"]
+
+for image in images:
+    image_path = "test_images/" + image
+    image = Image.open(image_path)
+
+    image = prepare_image(image)
+
+    # Make predictions
+    predictions = model.predict(image)
+    predicted_label = np.argmax(predictions[0])
+
+    # Display the image and predicted label
     plt.figure()
-    plt.imshow(wrong_images[i], cmap='gray')
-    plt.title("True: " + str(true_labels[i]) + " Predicted: " + str(predicted_labels[i]))
-
+    plt.imshow(image.reshape(28, 28), cmap="gray")
+    plt.title(f"Predicted Label: {predicted_label}")
 
 
 plt.show()
